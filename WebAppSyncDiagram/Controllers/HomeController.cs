@@ -14,7 +14,8 @@ namespace WebAppSyncDiagram.Controllers
             List<DiagramNodeViewModel> model = new List<DiagramNodeViewModel>();
 
             // AS - get de persoon
-            PersoonViewModel persoon = new PersoonViewModel(Guid.NewGuid());
+            PersoonViewModel persoon = new PersoonViewModel();
+            persoon.Id = Guid.NewGuid();
             persoon.Naam = "Persoon";
 
             // AS - get de relaties
@@ -23,7 +24,7 @@ namespace WebAppSyncDiagram.Controllers
             Array values = Enum.GetValues(typeof(TypeRelatie));
             Random random = new Random();
 
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 10; i++)
             {
                 RelatieViewModel relatie = new RelatieViewModel
                 {
@@ -32,45 +33,72 @@ namespace WebAppSyncDiagram.Controllers
                     typeRelatie = (TypeRelatie)values.GetValue(random.Next(values.Length))
                 };
 
-                switch (relatie.typeRelatie)
-                {
-                    case TypeRelatie.Specialist:
-                        relatie.Kleur = "red";
-                        break;
-                    case TypeRelatie.Profesioneel:
-                        relatie.Kleur = "blue";
-                        break;
-                    case TypeRelatie.Familie:
-                        relatie.Kleur = "green";
-                        break;
-                    default:
-                        break;
-                }
                 relaties.Add(relatie);   
             }
 
             persoon.Relaties = relaties;
+
 
             // AS - build de model
             model.Add(new DiagramNodeViewModel
             {
                 Id = persoon.Id.ToString(),
                 Naam = persoon.Naam,
+                Kleur = "orange"
                 
             });
 
             Boolean isFamilieGemaakt = false;
+            Boolean isProfesioneel = false;
+            Boolean isSpecialist = false;
             foreach (var item in persoon.Relaties.OrderByDescending(r => r.typeRelatie))
             {
                 if (item.typeRelatie == TypeRelatie.Familie && isFamilieGemaakt == false)
                 {
                     model.Add(new DiagramNodeViewModel
                     {
-
+                        Id = TypeRelatie.Familie.ToString(),
+                        IdParent = persoon.Id.ToString(),
+                        Naam = "Familie",
+                        Kleur = "green"
                     });
 
                     isFamilieGemaakt = true;
                 }
+
+                if (item.typeRelatie == TypeRelatie.Profesioneel && isProfesioneel == false)
+                {
+                    model.Add(new DiagramNodeViewModel
+                    {
+                        Id = TypeRelatie.Profesioneel.ToString(),
+                        IdParent = persoon.Id.ToString(),
+                        Naam = "Profesioneel",
+                        Kleur = "blue"
+                    });
+
+                    isProfesioneel = true;
+                }
+
+                if (item.typeRelatie == TypeRelatie.Specialist && isSpecialist == false)
+                {
+                    model.Add(new DiagramNodeViewModel
+                    {
+                        Id = TypeRelatie.Specialist.ToString(),
+                        IdParent = persoon.Id.ToString(),
+                        Naam = "Specialist",
+                        Kleur = "red"
+                    });
+
+                    isSpecialist = true;
+                }
+
+                model.Add(new DiagramNodeViewModel
+                {
+                    Id = item.Id.ToString(),
+                    IdParent = item.typeRelatie.ToString(),
+                    Naam = item.Naam,
+                    Kleur = "#333333"
+                });
             }
 
             return View(model);

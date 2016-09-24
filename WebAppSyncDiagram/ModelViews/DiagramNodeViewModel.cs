@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebAppSyncDiagram.Controllers
+namespace WebAppSyncDiagram.ModelViews
 {
     public class DiagramNodeViewModel
     {
