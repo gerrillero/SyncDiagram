@@ -11,8 +11,13 @@ namespace WebAppSyncDiagram.Controllers
     {
         public ActionResult Index()
         {
-            PersoonViewModel model = new PersoonViewModel(Guid.NewGuid());
+            List<DiagramNodeViewModel> model = new List<DiagramNodeViewModel>();
 
+            // AS - get de persoon
+            PersoonViewModel persoon = new PersoonViewModel(Guid.NewGuid());
+            persoon.Naam = "Persoon";
+
+            // AS - get de relaties
             List<RelatieViewModel> relaties = new List<RelatieViewModel>();
 
             Array values = Enum.GetValues(typeof(TypeRelatie));
@@ -44,7 +49,29 @@ namespace WebAppSyncDiagram.Controllers
                 relaties.Add(relatie);   
             }
 
-            model.Relaties = relaties;
+            persoon.Relaties = relaties;
+
+            // AS - build de model
+            model.Add(new DiagramNodeViewModel
+            {
+                Id = persoon.Id.ToString(),
+                Naam = persoon.Naam,
+                
+            });
+
+            Boolean isFamilieGemaakt = false;
+            foreach (var item in persoon.Relaties.OrderByDescending(r => r.typeRelatie))
+            {
+                if (item.typeRelatie == TypeRelatie.Familie && isFamilieGemaakt == false)
+                {
+                    model.Add(new DiagramNodeViewModel
+                    {
+
+                    });
+
+                    isFamilieGemaakt = true;
+                }
+            }
 
             return View(model);
         }
