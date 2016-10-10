@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<WebAppSyncDiagram.ModelViews.DiagramNodeViewModel>
 
 @{
-    ViewBag.Title = "Relaties";
+    ViewBag.Title = "Diagram Organisatie";
 }
+
+<button onclick="collapseExpanded()">Expand / Collapse</button>
 
 <div class="content-container-fluid">
     <div class="row">
         <div class="cols-sample-area">
-            <div id="diagram"></div>
+            <div id="diagramGroepen"></div>
         </div>
     </div>
 </div>
@@ -16,11 +18,13 @@
     <script>
 
         var data2 = ej.parseJSON(@Html.Raw(Json.Encode(Model)));
+        
         console.log(data2);
 
         function nodeTemplate(diagram, node) {
             node.labels[0].text = node.Naam;
             node.fillColor = node.Kleur;
+            node.cssClass = node.Kleur;
         }
 
         function getLayoutInfo(diagram, node, options) {
@@ -36,13 +40,13 @@
                 options.offset = -58;
             }
         }
-        
+
         if (!(ej.browserInfo().name === "msie" && Number(ej.browserInfo().version) < 9)) {
-            $("#diagram").ejDiagram({
-                width: "100%", height: "650px",
+            $("#diagramGroepen").ejDiagram({
+                width: "100%", height: "800px",
                 //use automatic layout to arranging elements on the page
                 layout: {
-                    type: "organizationalchart", horizontalSpacing: 40, verticalSpacing: 40, marginY: 30,
+                    type: "organizationalchart", horizontalSpacing: 80, verticalSpacing: 50, marginY: 30,
                     getLayoutInfo: getLayoutInfo
                 },
                 defaultSettings: {
@@ -65,14 +69,50 @@
                     id: "Id", parent: "IdParent",
                     //specifies the dataSource
                     dataSource: data2
-                }
+                },
+                //Defines double click event
+                doubleClick: removeNode, //onDoubleClick,
+                //itemClick: removeNode
             });
-            diagramFitToPage("diagram");
+            diagramFitToPage("diagramGroepen");
         }
         else {
             alert("Diagram will not be supported in IE Version < 9");
         }
 
-    </script>
 
+        function collapseExpanded() {
+            var diagram = $("#diagramGroepen").ejDiagram("instance");
+            $.each(diagram._nodes, function (index, node) {
+                if (node.cssClass === "orange") {
+                    if (node.IdParent !== "") {
+                        debugger;
+                        diagram.updateNode(node.name, { isExpanded: !node.isExpanded });
+                    }
+                }
+            });
+        }
+
+        function removeNode(args) {
+            var diagram = $("#diagramGroepen").ejDiagram("instance");
+            var node = args.element;
+            debugger;
+            diagram.remove(node);
+            //diagram.refresh();
+            diagram.layout();
+        }
+
+        function onDoubleClick(args) {
+            var diagram = $("#diagramGroepen").ejDiagram("instance");
+            var node = args.element;
+            debugger;
+
+            // Sets the double clicked node as fixed node
+            $("#diagramGroepen").ejDiagram({ layout: { fixedNode: node.name } });
+            
+            //Expands/collapses the children of node
+            diagram.updateNode(node.name, { isExpanded: !node.isExpanded });
+        }
+
+    </script>
 }

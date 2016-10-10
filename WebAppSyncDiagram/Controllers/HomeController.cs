@@ -51,13 +51,13 @@ namespace WebAppSyncDiagram.Controllers
             Boolean isFamilieGemaakt = false;
             Boolean isProfesioneel = false;
             Boolean isSpecialist = false;
-            foreach (var item in persoon.Relaties.OrderByDescending(r => r.typeRelatie))
+            foreach (var item in persoon.Relaties)
             {
                 if (item.typeRelatie == TypeRelatie.Familie && isFamilieGemaakt == false)
                 {
                     model.Add(new DiagramNodeViewModel
                     {
-                        Id = TypeRelatie.Familie.ToString(),
+                        Id = "Familie",
                         IdParent = persoon.Id.ToString(),
                         Naam = "Familie",
                         Kleur = "green"
@@ -70,7 +70,7 @@ namespace WebAppSyncDiagram.Controllers
                 {
                     model.Add(new DiagramNodeViewModel
                     {
-                        Id = TypeRelatie.Profesioneel.ToString(),
+                        Id = "Profesioneel",
                         IdParent = persoon.Id.ToString(),
                         Naam = "Profesioneel",
                         Kleur = "blue"
@@ -83,7 +83,7 @@ namespace WebAppSyncDiagram.Controllers
                 {
                     model.Add(new DiagramNodeViewModel
                     {
-                        Id = TypeRelatie.Specialist.ToString(),
+                        Id = "Specialist",
                         IdParent = persoon.Id.ToString(),
                         Naam = "Specialist",
                         Kleur = "red"

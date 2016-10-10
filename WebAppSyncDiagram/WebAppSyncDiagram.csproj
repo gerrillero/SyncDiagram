@@ -223,6 +223,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DiagramGroepenController.cs" />
     <Compile Include="ModelViews\DiagramNodeViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="ModelViews\GroepViewModel.cs" />
     <Compile Include="ModelViews\PersoonViewModel.cs" />
     <Compile Include="ModelViews\RelatieViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -354,12 +356,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\cultures\ej.culture.es-ES.min.js" />
-    <Content Include="Scripts\DiagramScripts\control.js" />
     <Content Include="Scripts\DiagramScripts\DiagramCommon.js" />
-    <Content Include="Scripts\DiagramScripts\events.js" />
-    <Content Include="Scripts\DiagramScripts\IntelligentShapes.js" />
-    <Content Include="Scripts\DiagramScripts\knockout-min.js" />
-    <Content Include="Scripts\DiagramScripts\methods.js" />
     <Content Include="Scripts\ej\ej.globalize.min.js" />
     <Content Include="Scripts\ej\ej.unobtrusive.min.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -441,6 +438,7 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\DiagramGroepen\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
