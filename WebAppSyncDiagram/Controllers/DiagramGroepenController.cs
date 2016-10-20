@@ -49,13 +49,13 @@ namespace WebAppSyncDiagram.Controllers
         private List<GroepViewModel> GetGroepen()
         {
             List<GroepViewModel> groepen = new List<GroepViewModel>();
-            groepen.Add( new GroepViewModel { Id = 1, Naam = "Parent groep"});
+            groepen.Add(new GroepViewModel { Id = 1, Naam = "Parent groep" });
             groepen.Add(new GroepViewModel { Id = 2, Naam = "Groep 2", IdParent = 1 });
             groepen.Add(new GroepViewModel { Id = 3, Naam = "Groep 3", IdParent = 1 });
             groepen.Add(new GroepViewModel { Id = 4, Naam = "Groep 4", IdParent = 1 });
 
             Random random = new Random();
-            for (int i = 1; i < 20; i++)
+            for (int i = 1; i < 10; i++)
             {
                 GebruikerViewModel gebruiker = new GebruikerViewModel { Id = Guid.NewGuid(), Naam = "Gebruiker " + i };
                 Int32 randomNumber = random.Next(groepen.Count);

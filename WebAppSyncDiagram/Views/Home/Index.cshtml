@@ -21,6 +21,7 @@
         function nodeTemplate(diagram, node) {
             node.labels[0].text = node.Naam;
             node.fillColor = node.Kleur;
+            node.ChartType = "right";
         }
 
         function getLayoutInfo(diagram, node, options) {

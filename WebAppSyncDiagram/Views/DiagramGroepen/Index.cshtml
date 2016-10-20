@@ -4,7 +4,8 @@
     ViewBag.Title = "Diagram Organisatie";
 }
 
-<button onclick="collapseExpanded()">Expand / Collapse</button>
+<button onclick="expanded()">Expand</button>
+<button onclick="collapse()">Collapse</button>
 
 <div class="content-container-fluid">
     <div class="row">
@@ -18,13 +19,14 @@
     <script>
 
         var data2 = ej.parseJSON(@Html.Raw(Json.Encode(Model)));
-        
+
         console.log(data2);
 
         function nodeTemplate(diagram, node) {
             node.labels[0].text = node.Naam;
             node.fillColor = node.Kleur;
             node.cssClass = node.Kleur;
+            node.ChartType = "right";
         }
 
         function getLayoutInfo(diagram, node, options) {
@@ -34,19 +36,27 @@
             }
             if (!options.hasSubTree) {
                 if (node.ChartType) {
-                    options.type = node.ChartType
+                    options.type = node.ChartType;
                 }
 
                 options.offset = -58;
             }
         }
 
+        var userHandle = [];
+        var cloneHandle = ej.datavisualization.Diagram.UserHandle();
+        cloneHandle.name = "cloneHandle";
+        cloneHandle.backgroundColor = "#4D4D4D";
+        cloneHandle.size = 40;
+        debugger;
+        userHandle.push(cloneHandle);
+
         if (!(ej.browserInfo().name === "msie" && Number(ej.browserInfo().version) < 9)) {
             $("#diagramGroepen").ejDiagram({
                 width: "100%", height: "800px",
                 //use automatic layout to arranging elements on the page
                 layout: {
-                    type: "organizationalchart", horizontalSpacing: 80, verticalSpacing: 50, marginY: 30,
+                    type: "organizationalchart", horizontalSpacing: 80, verticalSpacing: 50,  margin: { left: 25, right: 25, top: 25, bottom: 25},
                     getLayoutInfo: getLayoutInfo
                 },
                 defaultSettings: {
@@ -58,12 +68,14 @@
                     //set the default properties of the connectors.
                     connector: { segments: [{ "type": "orthogonal" }], targetDecorator: { shape: "none" } }
                 },
+                scrollSettings: { padding: { left: 25, right: 25, top: 25, bottom: 25} },
                 //initialize the node template.
                 nodeTemplate: nodeTemplate,
-                tool: ej.datavisualization.Diagram.Tool.None,
+                tool: ej.datavisualization.Diagram.Tool.SingleSelect, // & ~ej.datavisualization.Diagram.Tool.Path,
                 pageSettings: { scrollLimit: "diagram" },
                 snapSettings: { snapConstraints: ej.datavisualization.Diagram.SnapConstraints.None },
                 enableContextMenu: false,
+                selectedItems:{ userHandles:userHandle },
                 //configure data source for diagram
                 dataSourceSettings: {
                     id: "Id", parent: "IdParent",
@@ -80,18 +92,35 @@
             alert("Diagram will not be supported in IE Version < 9");
         }
 
+        function setZoom(zoom) {
+            var diagram = $("#diagramGroepen").ejDiagram("instance");
+            diagram.model.scrollSettings.currentZoom = zoom;
+            console.log(diagram.model.scrollSettings.currentZoom);
+            debugger;
+        }
 
-        function collapseExpanded() {
+        function collapse() {
             var diagram = $("#diagramGroepen").ejDiagram("instance");
             $.each(diagram._nodes, function (index, node) {
                 if (node.cssClass === "orange") {
                     if (node.IdParent !== "") {
-                        debugger;
-                        diagram.updateNode(node.name, { isExpanded: !node.isExpanded });
+                        diagram.updateNode(node.name, { isExpanded: false });
                     }
                 }
             });
         }
+
+        function expanded() {
+            var diagram = $("#diagramGroepen").ejDiagram("instance");
+            $.each(diagram._nodes, function (index, node) {
+                if (node.cssClass === "orange") {
+                    if (node.IdParent !== "") {
+                        diagram.updateNode(node.name, { isExpanded: true });
+                    }
+                }
+            });
+        }
+
 
         function removeNode(args) {
             var diagram = $("#diagramGroepen").ejDiagram("instance");
@@ -109,7 +138,7 @@
 
             // Sets the double clicked node as fixed node
             $("#diagramGroepen").ejDiagram({ layout: { fixedNode: node.name } });
-            
+
             //Expands/collapses the children of node
             diagram.updateNode(node.name, { isExpanded: !node.isExpanded });
         }
